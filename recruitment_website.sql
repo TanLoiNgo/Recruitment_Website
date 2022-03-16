@@ -14,14 +14,22 @@ CREATE TABLE roles (
     role_name VARCHAR(50) NOT NULL
 );
 
+
 CREATE TABLE users (
     user_ID INT PRIMARY KEY,
-    role_ID INT NOT NULL,
     email VARCHAR(255) NOT NULL,
     pwd VARCHAR(255) NOT NULL,
-    registration_date DATE NOT NULL,
-    user_photo VARCHAR(50),
-    CONSTRAINT user_fk_role FOREIGN KEY (role_ID)
+    registration_date DATE,
+    is_active BOOLEAN,
+    verification_code VARCHAR(255)
+);
+
+CREATE TABLE users_roles (
+    user_ID INT NOT NULL,
+    role_ID INT NOT NULL,
+    FOREIGN KEY (user_ID)
+        REFERENCES users (user_ID),
+	FOREIGN KEY (role_ID)
         REFERENCES roles (role_ID)
 );
 
@@ -30,11 +38,15 @@ CREATE TABLE job_seeker (
     user_ID INT NOT NULL,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
+	user_photo VARCHAR(50),
     phone_number VARCHAR(12) NOT NULL,
     dob DATE NOT NULL,
     gender VARCHAR(50) NOT NULL,
-    city VARCHAR(255) NOT NULL,
-    province VARCHAR(255) NOT NULL,
+    address VARCHAR(50) NOT NULL,
+    city VARCHAR(50) NOT NULL,
+    province VARCHAR(50) NOT NULL,
+    postal_code VARCHAR(7),
+    country VARCHAR(50) NOT NULL,
     summary VARCHAR(500) NOT NULL,
     CONSTRAINT job_seeker_fk_users FOREIGN KEY (user_ID)
         REFERENCES users (user_ID)
@@ -122,13 +134,13 @@ CREATE TABLE job_posting (
     workplace_type_ID INT NOT NULL,
     job_title VARCHAR(50) NOT NULL,
     job_description VARCHAR(500) NOT NULL,
-    street_address VARCHAR(50) NOT NULL,
+    address VARCHAR(50) NOT NULL,
     city VARCHAR(50) NOT NULL,
     postal_code VARCHAR(7) NOT NULL,
     country VARCHAR(50) NOT NULL,
     job_created_date DATE NOT NULL,
     is_active CHAR(1) NOT NULL,
-    experience_description VARCHAR(255) NOT NULL,
+    job_posting_description VARCHAR(255) NOT NULL,
     CONSTRAINT job_posting_fk_users FOREIGN KEY (user_ID)
         REFERENCES users (user_ID),
     CONSTRAINT job_posting_fk_job_company FOREIGN KEY (company_ID)
